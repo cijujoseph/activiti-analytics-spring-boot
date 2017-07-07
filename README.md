@@ -7,3 +7,6 @@ Activiti must be running with both history and events turned on to have analytic
 
 * Run using the following command 
 	`mvn clean spring-boot:run `
+	
+* The app brings up an elasticsearch instance on startup. If you want to use a standalone elasticsearch, comment out the elasticsearch dependency in pom.xml.
+* If using the default elasticsearch with this app, the version number is 2.4.5 (this is dictated by the elastic springboot starter). If you are looking for a compatible Kibana version -> download 4.6.3 from https://www.elastic.co/downloads/past-releases/kibana-4-6-3
