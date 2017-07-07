@@ -12,6 +12,7 @@ Activiti must be running with both history and events turned on to have analytic
 * Running using the packaged jar
 	
 	`mvn clean package`
+	
 	`java -jar target/activiti-analytics-spring-boot-1.0.0-SNAPSHOT.jar`
 	
 * The app brings up an elasticsearch instance on startup. If you want to use a standalone elasticsearch, comment out the elasticsearch dependency in pom.xml.
