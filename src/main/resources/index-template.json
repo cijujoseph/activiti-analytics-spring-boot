@@ -1,0 +1,102 @@
+
+{
+  "template": "bpmanalyticseventlog*",
+    "settings": {
+      "index": {
+        "analysis": {
+          "analyzer": {
+            "standard": {
+              "filter": [
+                "asciifolding",
+                "lowercase"
+              ],
+              "type": "standard",
+              "tokenizer": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "mappings": {
+      "bpmanalyticsevent": {
+        "dynamic": "true",
+        "dynamic_templates": [
+          {
+            "string_fields": {
+              "mapping": {
+                "index": "not_analyzed",
+                "omit_norms": true,
+                "type": "string"
+              },
+              "match_mapping_type": "string",
+              "match": "*"
+            }
+          },
+          {
+            "variable_mappings": {
+              "path_match": "variables.*",
+              "mapping": {
+                "index": "not_analyzed",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "startprocess_variable_mappings": {
+              "path_match": "processStartVariables.*",
+              "mapping": {
+                "index": "not_analyzed",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "custom_processmappings": {
+              "path_match": "processSpecificCustomMap.*",
+              "mapping": {
+                "index": "not_analyzed",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "task_complete_variable_mappings": {
+              "path_match": "taskCompleteVariables.*",
+              "mapping": {
+                "index": "not_analyzed",
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "properties": {
+          "ProcessStartDate": {
+            "format": "dd-MMM-yyyy HH:mm:ss",
+            "type": "date"
+          },
+          "TaskDueDate": {
+            "format": "dd-MMM-yyyy HH:mm:ss",
+            "type": "date"
+          },
+          "TaskStartDate": {
+            "format": "dd-MMM-yyyy HH:mm:ss",
+            "type": "date"
+          },
+          "ProcessEndDate": {
+            "format": "dd-MMM-yyyy HH:mm:ss",
+            "type": "date"
+          },
+          "TaskEndDate": {
+            "format": "dd-MMM-yyyy HH:mm:ss",
+            "type": "date"
+          },
+          "TaskClaimDate": {
+            "format": "dd-MMM-yyyy HH:mm:ss",
+            "type": "date"
+          }
+        }
+      }
+    },
+    "aliases": {}
+  
+}

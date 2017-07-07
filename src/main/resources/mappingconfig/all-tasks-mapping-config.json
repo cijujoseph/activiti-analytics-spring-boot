@@ -1,0 +1,123 @@
+{	
+	"fileNamePrefix": "not used in the current implementation. used for some reporting implementation elsewhere",
+    "header": ["not used in the current implementation. used for some reporting implementation elsewhere"],
+    "mappings": [
+        {
+            "originalName": "startTime",
+            "name": "TaskStartDate",
+            "type": "dateTime",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
+                "targetFormat": "dd-MMM-yyyy HH:mm:ss",
+                "originalValueFieldName": "TaskStartDateTimestamp"
+            }
+        },
+        {
+            "originalName": "endTime",
+            "name": "TaskEndDate",
+            "type": "dateTime",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
+                "targetFormat": "dd-MMM-yyyy HH:mm:ss",
+                "originalValueFieldName": "TaskEndDateTimestamp"
+            }
+        },
+        
+        {
+            "originalName": "claimTime",
+            "name": "TaskClaimDate",
+            "type": "dateTime",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
+                "targetFormat": "dd-MMM-yyyy HH:mm:ss",
+                "originalValueFieldName": "TaskClaimDateTimestamp"
+            }
+        },
+        {
+            "originalName": "dueDate",
+            "name": "TaskDueDate",
+            "type": "dateTime",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
+                "targetFormat": "dd-MMM-yyyy HH:mm:ss",
+                "originalValueFieldName": "TaskDueDateTimestamp"
+            }
+        },
+        {
+            "originalName": "durationInMillis",
+            "name": "TaskDurationInWords",
+            "type": "durationInMills",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "formatToWords": true,
+                "originalValueFieldName": "TaskDuration"
+            }
+        },
+        {
+            "originalName": "workTimeInMillis",
+            "name": "TaskDurationSinceClaimedInWords",
+            "type": "durationInMills",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "formatToWords": true,
+                "originalValueFieldName": "TaskDurationSinceClaimed"
+            }
+        },
+        {
+            "originalName": "description",
+            "name": "TaskDescription",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+        },
+        {
+            "originalName": "id",
+            "name": "TaskId",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+        },
+        {
+            "originalName": "assignee",
+            "name": "Assignee",
+            "type": "activitiUserId",
+            "fieldSource": "taskInstanceMetaData",
+            "format": {
+                "keepOriginalValue": true,
+                "originalValueFieldName": "ActivtiIdOfAssignee",
+                "setIdMetadataFields": true
+            }
+        },
+        {
+            "originalName": "deleteReason",
+            "name": "TaskCompleteReason",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+        },
+        {
+            "originalName": "formKey",
+            "name": "FormKey",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+        },
+        {
+            "originalName": "taskDefinitionKey",
+            "name": "TaskDefinitionKey",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+        },
+        {
+            "name": "TaskOutcome",
+            "type": "string",
+            "fieldSource": "taskOutcome"
+        }
+    ]
+}
