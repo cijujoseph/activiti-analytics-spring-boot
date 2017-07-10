@@ -22,7 +22,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 /**
- * Bean that creates the database table
+ * Creating Activiti Datasoure and Mapping Configuration
  */
 @Configuration("analyticsConfig")
 public class AnalyticsConfig {

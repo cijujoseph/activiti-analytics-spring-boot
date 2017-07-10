@@ -42,47 +42,46 @@ public class ScheduledAnalyticsProcessing {
 	public void analyticsProcessing() throws Exception {
 
 		if (isEnterprise.equals("true")) {
-
-		}
-
-		if (processEngine.getVariableTypes().getVariableType("data-model-type") == null) {
-			// Adding the data model type variable type to engine config for APS
-			// implementations.
-			VariableTypes variableTypes = processEngine.getVariableTypes();
-			int serializableIndex = variableTypes.getTypeIndex(SerializableType.TYPE_NAME);
-			if (serializableIndex > -1) {
-				variableTypes.addType(new VariableDataEntityType(), serializableIndex);
-			} else {
-				variableTypes.addType(new VariableDataEntityType());
+			if (processEngine.getVariableTypes().getVariableType("data-model-type") == null) {
+				// Adding the data model type variable type to engine config for
+				// APS implementations.
+				VariableTypes variableTypes = processEngine.getVariableTypes();
+				int serializableIndex = variableTypes.getTypeIndex(SerializableType.TYPE_NAME);
+				if (serializableIndex > -1) {
+					variableTypes.addType(new VariableDataEntityType(), serializableIndex);
+				} else {
+					variableTypes.addType(new VariableDataEntityType());
+				}
 			}
 		}
 
 		customAnalyticsEndpoint.preProcessing();
 		boolean newEventsExist = true;
 		int loopSize = 0;
-		while(newEventsExist == true) {
+		while (newEventsExist == true) {
 			loopSize++;
-			logger.info("processing loop counter - "+loopSize);
-			//Fetch latest watermark
+			logger.info("processing loop counter - " + loopSize);
+			// Fetch latest watermark
 			String timeStamp = watermark.fetchWatermark();
-			
+
 			Map<String, Object> processBatchMetadata = processBatchPreparation.getBatchMetadata(timeStamp);
-			
+
 			newEventsExist = (boolean) processBatchMetadata.get("newEventsExist");
-			List<Map<String, Object>> processList = (List<Map<String, Object>>) processBatchMetadata.get("processIdList");
-			
+			List<Map<String, Object>> processList = (List<Map<String, Object>>) processBatchMetadata
+					.get("processIdList");
+
 			if (processList != null) {
 				logger.debug("process list is - " + processList.toString());
 				for (Map<String, Object> processInstance : processList) {
 					try {
 						generateProcessAndTaskDocs.execute(processInstance);
 					} catch (Exception e) {
-	
+
 					}
 				}
-				//Update watermark
+				// Update watermark
 				watermark.updateWatermark((String) processBatchMetadata.get("toTimestamp"));
-			} else{
+			} else {
 				logger.info("process list is null");
 			}
 		}
