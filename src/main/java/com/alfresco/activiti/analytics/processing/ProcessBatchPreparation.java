@@ -35,6 +35,8 @@ public class ProcessBatchPreparation {
 	@Value("${analytics.sql.queryBatchSize}")
 	private String queryBatchSize;
 	
+	@Value("${analytics.sql.dbType}")
+	private String dbType;
 	
 
 	public Map<String, Object> getBatchMetadata(String lastUpdatedTimestamp) throws SQLException {
@@ -87,7 +89,7 @@ public class ProcessBatchPreparation {
 		String excludedProcessListQuery = createExcludedProcessQueryStatement();
 		
 		String sql;
-		if (activitiDataSource.getConnection().getMetaData().getDatabaseProductName().equals("PostgreSQL")) {
+		if (dbType.equals("PostgreSQL")) {
 			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TIME_STAMP_ FROM " +
 			// Select from processed table assuming the activiti analytics
 			// process is moving data to this table
@@ -115,6 +117,7 @@ public class ProcessBatchPreparation {
 					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' "
 					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC)";
 		}
+		
 		logger.debug("getMostRecentTimestamp() SQL: " + sql);
 		List<Map<String, Object>> rows = activitiJdbcTemplate.queryForList(sql);
 		logger.debug("getMostRecentTimestamp() SQL Response: " + rows);
