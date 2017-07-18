@@ -22,6 +22,9 @@ public class ProcessBatchPreparation {
 
 	@Autowired
 	private DataSource activitiDataSource;
+	
+	@Autowired
+	private JdbcTemplate activitiJdbcTemplate;
 
 	@Value("${analytics.excludedProcessList}")
 	private String excludedProcessList;
@@ -31,19 +34,20 @@ public class ProcessBatchPreparation {
 	
 	@Value("${analytics.sql.queryBatchSize}")
 	private String queryBatchSize;
+	
+	
 
 	public Map<String, Object> getBatchMetadata(String lastUpdatedTimestamp) throws SQLException {
-		Connection connection = activitiDataSource.getConnection();
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(activitiDataSource);
+		
 		Map<String, Object> batchMetadata = new HashMap<String, Object>();
-		String maxTimeStamp = getMostRecentTimestamp(lastUpdatedTimestamp, jdbcTemplate);
+		String maxTimeStamp = getMostRecentTimestamp(lastUpdatedTimestamp);
 
 		if (maxTimeStamp != null) {
 			batchMetadata.put("newEventsExist", true);
 			batchMetadata.put("toTimestamp", maxTimeStamp);
 
 			// Get a list of processes instances
-			List<Map<String, Object>> processIdQueryList = getProcessIdList(jdbcTemplate, lastUpdatedTimestamp,
+			List<Map<String, Object>> processIdQueryList = getProcessIdList(lastUpdatedTimestamp,
 					maxTimeStamp);
 
 			batchMetadata.put("processIdList", processIdQueryList);
@@ -53,11 +57,11 @@ public class ProcessBatchPreparation {
 			batchMetadata.put("newEventsExist", false);
 		}
 
-		connection.close();
+	
 		return batchMetadata;
 	}
 
-	private List<Map<String, Object>> getProcessIdList(JdbcTemplate jdbcTemplate, String lastUpdatedTimestamp,
+	private List<Map<String, Object>> getProcessIdList(String lastUpdatedTimestamp,
 			String maxTimeStamp) {
 
 		String excludedProcessListQuery = createExcludedProcessQueryStatement();
@@ -73,12 +77,12 @@ public class ProcessBatchPreparation {
 				// processing
 				"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' " + "AND TIME_STAMP_ <= '" + maxTimeStamp + "'";
 		logger.debug("getProcessIdList() SQL: " + processAndTaskQuery);
-		List<Map<String, Object>> processIdQueryList = jdbcTemplate.queryForList(processAndTaskQuery);
+		List<Map<String, Object>> processIdQueryList = activitiJdbcTemplate.queryForList(processAndTaskQuery);
 		logger.debug("getProcessIdList() SQL Response: " + processIdQueryList);
 		return processIdQueryList;
 	}
 
-	private String getMostRecentTimestamp(String lastUpdatedTimestamp, JdbcTemplate jdbcTemplate) throws SQLException {
+	private String getMostRecentTimestamp(String lastUpdatedTimestamp) throws SQLException {
 
 		String excludedProcessListQuery = createExcludedProcessQueryStatement();
 		
@@ -112,7 +116,7 @@ public class ProcessBatchPreparation {
 					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC)";
 		}
 		logger.debug("getMostRecentTimestamp() SQL: " + sql);
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+		List<Map<String, Object>> rows = activitiJdbcTemplate.queryForList(sql);
 		logger.debug("getMostRecentTimestamp() SQL Response: " + rows);
 		return rows.get(0).get("TO_TIMESTAMP") != null
 				? ((java.sql.Timestamp) rows.get(0).get("TO_TIMESTAMP")).toString() : null;

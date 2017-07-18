@@ -55,9 +55,9 @@ public class GenerateProcessAndTaskDocs {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
+	
 	@Autowired
-	private DataSource activitiDataSource;
+	private JdbcTemplate activitiJdbcTemplate;
 
 	@Value("${analytics.sql.eventDataQuery}")
 	private String eventDataQuery;
@@ -110,14 +110,12 @@ public class GenerateProcessAndTaskDocs {
 	public List<Map<String, Object>> fetchProcessInstanceEventData(Map<String, Object> processInstanceData)
 			throws Exception {
 
-		Connection connection = activitiDataSource.getConnection();
 
 		String sql = eventDataQuery + " WHERE PROC_INST_ID_ = '" + processInstanceData.get("processInstanceId")
 				+ "' AND TYPE_ IN ('PROCESSINSTANCE_START', 'PROCESSINSTANCE_END', 'TASK_CREATED', 'TASK_ASSIGNED', 'TASK_COMPLETED')";
 		logger.debug("fetchProcessInstanceEventData() SQL: " + sql);
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(activitiDataSource);
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-		connection.close();
+		List<Map<String, Object>> rows = activitiJdbcTemplate.queryForList(sql);
+		
 		return handleClob(rows);
 	}
 

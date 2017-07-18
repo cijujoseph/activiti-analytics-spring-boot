@@ -14,10 +14,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
@@ -36,6 +36,11 @@ public class AnalyticsConfig {
 		logger.debug("creating activitiDataSource bean");
 		return DataSourceBuilder.create().build();
 	}
+	
+	@Bean
+    public JdbcTemplate activitiJdbcTemplate(DataSource activitiDataSource) {
+        return new JdbcTemplate(activitiDataSource);
+    }
 
 	@SuppressWarnings("unchecked")
 	@Bean
