@@ -1,12 +1,10 @@
 package com.alfresco.activiti.analytics.processing;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +17,6 @@ import org.springframework.stereotype.Component;
 public class ProcessBatchPreparation {
 
 	protected static final Logger logger = LoggerFactory.getLogger(ProcessBatchPreparation.class);
-
-	@Autowired
-	private DataSource activitiDataSource;
 	
 	@Autowired
 	private JdbcTemplate activitiJdbcTemplate;
