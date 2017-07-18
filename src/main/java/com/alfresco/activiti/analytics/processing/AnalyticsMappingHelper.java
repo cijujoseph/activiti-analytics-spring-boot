@@ -124,47 +124,47 @@ public class AnalyticsMappingHelper {
 			}
 			break;
 		case "taskInstanceMetaData":
-			// if(mapping.get("originalName").equals("taskDefinitionKey")){
-			// transformedMap.put("TaskName", taskInstanceDetails.getName());
-			// }
 			switch ((String) mapping.get("name")) {
-			case "TaskStartDate":
-				value = taskInstanceDetails.getStartTime();
-				break;
-			case "TaskEndDate":
-				value = taskInstanceDetails.getEndTime();
-				break;
-			case "TaskClaimDate":
-				value = taskInstanceDetails.getClaimTime();
-				break;
-			case "TaskDueDate":
-				value = taskInstanceDetails.getDueDate();
-				break;
-			case "TaskDurationInWords":
-				value = taskInstanceDetails.getDurationInMillis();
-				break;
-			case "TaskDurationSinceClaimedInWords":
-				value = taskInstanceDetails.getWorkTimeInMillis();
-				break;
-			case "TaskDescription":
-				value = taskInstanceDetails.getDescription();
-				break;
-			case "TaskId":
-				value = taskInstanceDetails.getId();
-				break;
-			case "Assignee":
-				value = taskInstanceDetails.getAssignee();
-				break;
-			case "TaskCompleteReason":
-				value = taskInstanceDetails.getDeleteReason();
-				break;
-			case "FormKey":
-				value = taskInstanceDetails.getFormKey();
-				break;
-			case "TaskDefinitionKey":
-				value = taskInstanceDetails.getTaskDefinitionKey();
-				break;
-			}
+				case "TaskStartDate":
+					value = taskInstanceDetails.getStartTime();
+					break;
+				case "TaskName":
+					value = taskInstanceDetails.getName();
+					break;
+				case "TaskEndDate":
+					value = taskInstanceDetails.getEndTime();
+					break;
+				case "TaskClaimDate":
+					value = taskInstanceDetails.getClaimTime();
+					break;
+				case "TaskDueDate":
+					value = taskInstanceDetails.getDueDate();
+					break;
+				case "TaskDurationInWords":
+					value = taskInstanceDetails.getDurationInMillis();
+					break;
+				case "TaskDurationSinceClaimedInWords":
+					value = taskInstanceDetails.getWorkTimeInMillis();
+					break;
+				case "TaskDescription":
+					value = taskInstanceDetails.getDescription();
+					break;
+				case "TaskId":
+					value = taskInstanceDetails.getId();
+					break;
+				case "Assignee":
+					value = taskInstanceDetails.getAssignee();
+					break;
+				case "TaskCompleteReason":
+					value = taskInstanceDetails.getDeleteReason();
+					break;
+				case "FormKey":
+					value = taskInstanceDetails.getFormKey();
+					break;
+				case "TaskDefinitionKey":
+					value = taskInstanceDetails.getTaskDefinitionKey();
+					break;
+				}
 			break;
 		case "defaultValue":
 			value = mapping.get("defaultValue");

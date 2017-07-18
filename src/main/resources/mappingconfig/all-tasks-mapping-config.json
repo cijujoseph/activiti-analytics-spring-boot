@@ -80,6 +80,12 @@
             "fieldSource": "taskInstanceMetaData"
         },
         {
+            "originalName": "name",
+            "name": "TaskName",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+        },
+        {
             "originalName": "id",
             "name": "TaskId",
             "type": "string",
