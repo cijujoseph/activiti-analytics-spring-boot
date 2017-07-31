@@ -97,6 +97,19 @@ public class ProcessBatchPreparation {
 					// processing
 					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' "
 					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC limit "+queryBatchSize+") AS SUBQUERY";
+		} else if (dbType.equals("Oracle")) {
+			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TIME_STAMP_ FROM " +
+			// Select from processed table assuming the activiti analytics
+			// process is moving data to this table
+					eventTable + "  WHERE " +
+					// Exclude those processes in the exclude list
+					excludedProcessListQuery +
+					// Exclude any ad-hoc task data
+					"PROC_DEF_ID_ IS NOT NULL " +
+					// get only those data which has been created since the last
+					// processing
+					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' "
+					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC ) WHERE ROWNUM <= "+ queryBatchSize;
 		} else {
 			// H2 Query. This will need to be modified to work with other databases
 			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TOP "+queryBatchSize+" TIME_STAMP_ FROM " +
