@@ -63,8 +63,10 @@ public class ProcessBatchPreparation {
 
 		String excludedProcessListQuery = createExcludedProcessQueryStatement();
 		// Get the list of processes.
-		// H2 Query. This will need to be modified to work with other databases
-		String processAndTaskQuery = "select DISTINCT PROC_INST_ID_ as processInstanceId, "
+		// Tested databases are H2, Oracle and PostgreSQL. The query may need to be modified to work with other databases
+		String processAndTaskQuery = "";
+		if (dbType.equals("Oracle")) {
+			processAndTaskQuery = "select DISTINCT PROC_INST_ID_ as processInstanceId, "
 				+ "PROC_DEF_ID_ as processDefinitionId FROM " + eventTable + " WHERE " +
 				// Exclude those processes in the exclude list
 				excludedProcessListQuery +
@@ -72,7 +74,19 @@ public class ProcessBatchPreparation {
 				"PROC_DEF_ID_ IS NOT NULL " +
 				// get only those data which has been created since the last
 				// processing
-				"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' " + "AND TIME_STAMP_ <= '" + maxTimeStamp + "'";
+				"AND TIME_STAMP_ > to_timestamp('" + lastUpdatedTimestamp + "','YYYY-MM-DD HH24:MI:SS.FF') " + 
+				"AND TIME_STAMP_ <= to_timestamp('" + maxTimeStamp + "','YYYY-MM-DD HH24:MI:SS.FF') ";
+		} else {
+			processAndTaskQuery = "select DISTINCT PROC_INST_ID_ as processInstanceId, "
+					+ "PROC_DEF_ID_ as processDefinitionId FROM " + eventTable + " WHERE " +
+					// Exclude those processes in the exclude list
+					excludedProcessListQuery +
+					// Exclude any adhoc task data resulting in null rows
+					"PROC_DEF_ID_ IS NOT NULL " +
+					// get only those data which has been created since the last
+					// processing
+					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' " + "AND TIME_STAMP_ <= '" + maxTimeStamp + "'";
+		}
 		logger.debug("getProcessIdList() SQL: " + processAndTaskQuery);
 		List<Map<String, Object>> processIdQueryList = activitiJdbcTemplate.queryForList(processAndTaskQuery);
 		logger.debug("getProcessIdList() SQL Response: " + processIdQueryList);
@@ -108,7 +122,7 @@ public class ProcessBatchPreparation {
 					"PROC_DEF_ID_ IS NOT NULL " +
 					// get only those data which has been created since the last
 					// processing
-					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' "
+					"AND TIME_STAMP_ >  to_timestamp('" + lastUpdatedTimestamp + "','YYYY-MM-DD HH24:MI:SS.FF')  "
 					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC ) WHERE ROWNUM <= "+ queryBatchSize;
 		} else {
 			// H2 Query. This will need to be modified to work with other databases

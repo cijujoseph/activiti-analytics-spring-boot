@@ -29,6 +29,13 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
+		<!-- Uncomment and adjust if using oracle -->
+		<!-- <dependency>
+			<groupId>com.oracle.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>12.2.0.1</version>
+		</dependency> 
+		-->
 		<!-- Uncomment if using postgres -->
 		<!-- 
 		<dependency>
