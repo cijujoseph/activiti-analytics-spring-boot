@@ -41,10 +41,10 @@ mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 \
 * If using the default elasticsearch with this app, the version number is 2.4.5 (this is dictated by the elastic springboot starter). If you are looking for a compatible Kibana version -> download 4.6.3 from https://www.elastic.co/downloads/past-releases/kibana-4-6-3
 
 
-# Steps to set up some Kibana dashboards.
+# Set up some sample visualizations.
 Once you have Kibana running open http://localhost:5601/ (default host and port of Kibana unless you changed it) in your browser.
 
-Create an index pattern "bpmanalyticseventlog-*" as shown below. (Settings -> Indices -> bpmanalyticseventlog-* -> Create
+Create an index pattern "bpmanalyticseventlog-\*" as shown below. (Settings -> Indices -> bpmanalyticseventlog-\* -> Create
 ![Index Pattern 1](images/index-pattern-1.png)
 ![Index Pattern 1](images/index-pattern-2.png)
 
