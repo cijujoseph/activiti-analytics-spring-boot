@@ -1,0 +1,27 @@
+[
+  {
+    "_id": "Task-Search",
+    "_type": "search",
+    "_source": {
+      "title": "Task Search",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "ProcessName",
+        "ProcessStartDateTimestamp",
+        "ProcessState",
+        "TaskName",
+        "TaskState",
+        "TaskOutcome"
+      ],
+      "sort": [
+        "ProcessInstanceId",
+        "asc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"bpmanalyticseventlog-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"bpmanalyticseventlog-*\",\"key\":\"EventType\",\"negate\":false,\"value\":\"TaskInstance\"},\"query\":{\"match\":{\"EventType\":{\"query\":\"TaskInstance\",\"type\":\"phrase\"}}}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  }
+]

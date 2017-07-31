@@ -1,0 +1,91 @@
+[
+  {
+    "_id": "Task-Dashboard",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Task Dashboard",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[\n  {\n    \"id\": \"Task-Count\",\n    \"type\": \"visualization\",\n    \"panelIndex\": 1,\n    \"size_x\": 12,\n    \"size_y\": 2,\n    \"col\": 1,\n    \"row\": 1\n  },\n  {\n    \"id\": \"Task-Names\",\n    \"type\": \"visualization\",\n    \"panelIndex\": 2,\n    \"size_x\": 6,\n    \"size_y\": 4,\n    \"col\": 1,\n    \"row\": 3\n  },\n  {\n    \"id\": \"Task-States\",\n    \"type\": \"visualization\",\n    \"panelIndex\": 3,\n    \"size_x\": 6,\n    \"size_y\": 4,\n    \"col\": 7,\n    \"row\": 3\n  },\n  {\n    \"id\": \"Task-Search\",\n    \"type\": \"search\",\n    \"panelIndex\": 4,\n    \"size_x\": 12,\n    \"size_y\": 5,\n    \"col\": 1,\n    \"row\": 7,\n    \"columns\": [\n      \"ProcessName\",\n      \"ProcessStartDateTimestamp\",\n      \"ProcessState\",\n      \"TaskName\",\n      \"TaskState\",\n      \"TaskOutcome\"\n    ],\n    \"sort\": [\n      \"ProcessInstanceId\",\n      \"asc\"\n    ]\n  }\n]",
+      "optionsJSON": "{\n  \"darkTheme\": false\n}",
+      "uiStateJSON": "{\n  \"P-3\": {\n    \"vis\": {\n      \"legendOpen\": false\n    }\n  },\n  \"P-2\": {\n    \"vis\": {\n      \"legendOpen\": false\n    }\n  }\n}",
+      "version": 1,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now-90d",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"filter\": [\n    {\n      \"query\": {\n        \"query_string\": {\n          \"query\": \"*\",\n          \"analyze_wildcard\": true\n        }\n      }\n    }\n  ]\n}"
+      }
+    }
+  },
+  {
+    "_id": "Task-Search",
+    "_type": "search",
+    "_source": {
+      "title": "Task Search",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "ProcessName",
+        "ProcessStartDateTimestamp",
+        "ProcessState",
+        "TaskName",
+        "TaskState",
+        "TaskOutcome"
+      ],
+      "sort": [
+        "ProcessInstanceId",
+        "asc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"bpmanalyticseventlog-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"bpmanalyticseventlog-*\",\"key\":\"EventType\",\"negate\":false,\"value\":\"TaskInstance\"},\"query\":{\"match\":{\"EventType\":{\"query\":\"TaskInstance\",\"type\":\"phrase\"}}}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "Task-Count",
+    "_type": "visualization",
+    "_source": {
+      "title": "Task Count",
+      "visState": "{\n  \"title\": \"Task Count\",\n  \"type\": \"metric\",\n  \"params\": {\n    \"handleNoResults\": true,\n    \"fontSize\": 60\n  },\n  \"aggs\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"count\",\n      \"schema\": \"metric\",\n      \"params\": {\n        \"customLabel\": \"Total tasks in the system during last 90 Days\"\n      }\n    }\n  ],\n  \"listeners\": {}\n}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "savedSearchId": "Task-Search",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"filter\": []\n}"
+      }
+    }
+  },
+  {
+    "_id": "Task-Names",
+    "_type": "visualization",
+    "_source": {
+      "title": "Task Names",
+      "visState": "{\n  \"title\": \"Task Names\",\n  \"type\": \"pie\",\n  \"params\": {\n    \"shareYAxis\": true,\n    \"addTooltip\": true,\n    \"addLegend\": true,\n    \"isDonut\": false\n  },\n  \"aggs\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"count\",\n      \"schema\": \"metric\",\n      \"params\": {}\n    },\n    {\n      \"id\": \"2\",\n      \"type\": \"terms\",\n      \"schema\": \"segment\",\n      \"params\": {\n        \"field\": \"TaskName\",\n        \"size\": 5,\n        \"order\": \"desc\",\n        \"orderBy\": \"1\",\n        \"customLabel\": \"Task Name\"\n      }\n    },\n    {\n      \"id\": \"3\",\n      \"type\": \"terms\",\n      \"schema\": \"segment\",\n      \"params\": {\n        \"field\": \"ProcessName\",\n        \"size\": 5,\n        \"order\": \"desc\",\n        \"orderBy\": \"1\",\n        \"customLabel\": \"Process Name\"\n      }\n    }\n  ],\n  \"listeners\": {}\n}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "savedSearchId": "Task-Search",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"filter\": []\n}"
+      }
+    }
+  },
+  {
+    "_id": "Task-States",
+    "_type": "visualization",
+    "_source": {
+      "title": "Task States",
+      "visState": "{\n  \"title\": \"Task States\",\n  \"type\": \"histogram\",\n  \"params\": {\n    \"shareYAxis\": true,\n    \"addTooltip\": true,\n    \"addLegend\": true,\n    \"scale\": \"linear\",\n    \"mode\": \"stacked\",\n    \"times\": [],\n    \"addTimeMarker\": false,\n    \"defaultYExtents\": false,\n    \"setYExtents\": false,\n    \"yAxis\": {}\n  },\n  \"aggs\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"count\",\n      \"schema\": \"metric\",\n      \"params\": {}\n    },\n    {\n      \"id\": \"2\",\n      \"type\": \"terms\",\n      \"schema\": \"split\",\n      \"params\": {\n        \"field\": \"TaskState\",\n        \"size\": 5,\n        \"order\": \"desc\",\n        \"orderBy\": \"1\",\n        \"customLabel\": \"Task State\",\n        \"row\": false\n      }\n    }\n  ],\n  \"listeners\": {}\n}",
+      "uiStateJSON": "{\n  \"vis\": {\n    \"colors\": {\n      \"Count\": \"#6ED0E0\"\n    }\n  }\n}",
+      "description": "",
+      "savedSearchId": "Task-Search",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"filter\": []\n}"
+      }
+    }
+  }
+]

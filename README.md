@@ -39,3 +39,21 @@ mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 \
 	
 * The app brings up an elasticsearch instance on startup. If you want to use a standalone elasticsearch, comment out the elasticsearch dependency in pom.xml.
 * If using the default elasticsearch with this app, the version number is 2.4.5 (this is dictated by the elastic springboot starter). If you are looking for a compatible Kibana version -> download 4.6.3 from https://www.elastic.co/downloads/past-releases/kibana-4-6-3
+
+
+# Steps to set up some Kibana dashboards.
+Once you have Kibana running open http://localhost:5601/ (default host and port of Kibana unless you changed it) in your browser.
+
+Create an index pattern "bpmanalyticseventlog-*" as shown below. (Settings -> Indices -> bpmanalyticseventlog-* -> Create
+![Index Pattern 1](images/index-pattern-1.png)
+![Index Pattern 1](images/index-pattern-2.png)
+
+
+### Import sample dashboard and visualizations
+1.	Import a task search object using the JSON file "task-search-kibana-4.6.3.json" present in kibana folder. Settings -> Objects -> Searches -> Import -> task-search-kibana-4.6.3.json
+2.	After importing the task search, import the visualizations and dashboard built on top of the imported search using the file "task-dashboard-kibana-4.6.3.json". Settings -> Objects -> Searches -> Import ->-> task-dashboard-kibana-4.6.3.json
+3.	Once you have done the above two steps, you now should have a task dashboard in your kibana as shown below
+
+![Task Dashboard](images/task-dashboard.png)
+
+Similarly you can create more task/process dashboards and visualizations in Kibana!! It is now your turn to explore more!!
