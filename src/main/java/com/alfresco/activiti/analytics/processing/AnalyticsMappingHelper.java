@@ -64,7 +64,11 @@ public class AnalyticsMappingHelper {
 			case "BusinessKey":
 				value = processInstanceDetails.getBusinessKey();
 				break;
-
+			
+			case "ProcessInstanceName":
+				value = processInstanceDetails.getName();
+				break;
+				
 			case "ProcessDefinitionId":
 				value = processInstanceDetails.getProcessDefinitionId();
 				break;

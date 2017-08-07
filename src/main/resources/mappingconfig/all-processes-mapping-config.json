@@ -21,19 +21,21 @@
             "fieldSource": "processDefinitionMetaData"
         },
         {
-            "originalName": "businessKey",
             "name": "BusinessKey",
             "type": "string",
             "fieldSource": "processInstanceMetaData"
         },
+        {   
+            "name": "ProcessInstanceName",
+            "type": "string",
+            "fieldSource": "processInstanceMetaData"
+        },
         {
-            "originalName": "processDefinitionId",
             "name": "ProcessDefinitionId",
             "type": "string",
             "fieldSource": "processInstanceMetaData"
         },
         {
-            "originalName": "startUserId",
             "name": "StartUser",
             "type": "activitiUserId",
             "fieldSource": "processInstanceMetaData",
@@ -50,25 +52,21 @@
             "fieldSource": "processInstanceMetaData"
         },
         {
-            "originalName": "deleteReason",
             "name": "ProcessDeleteReason",
             "type": "string",
             "fieldSource": "processInstanceMetaData"
         },
         {
-            "originalName": "superProcessInstanceId",
             "name": "SuperProcessInstanceId",
             "type": "string",
             "fieldSource": "processInstanceMetaData"
         },
         {
-            "originalName": "id",
             "name": "ProcessInstanceId",
             "type": "string",
             "fieldSource": "processInstanceMetaData"
         },
         {
-            "originalName": "startTime",
             "name": "ProcessStartDate",
             "type": "dateTime",
             "fieldSource": "processInstanceMetaData",
@@ -80,7 +78,6 @@
             }
         },
         {
-            "originalName": "endTime",
             "name": "ProcessEndDate",
             "type": "dateTime",
             "fieldSource": "processInstanceMetaData",
@@ -92,7 +89,6 @@
             }
         },
         {
-            "originalName": "durationInMillis",
             "name": "ProcessDurationInWords",
             "type": "durationInMills",
             "fieldSource": "processInstanceMetaData",
