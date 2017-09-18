@@ -98,7 +98,7 @@ public class ProcessBatchPreparation {
 		String excludedProcessListQuery = createExcludedProcessQueryStatement();
 		
 		String sql;
-		if (dbType.equals("PostgreSQL")) {
+		if (dbType.equals("PostgreSQL") || dbType.equals("MySQL")) {
 			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TIME_STAMP_ FROM " +
 			// Select from processed table assuming the activiti analytics
 			// process is moving data to this table

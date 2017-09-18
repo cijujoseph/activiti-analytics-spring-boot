@@ -44,6 +44,13 @@
 			<version>9.4.1208.jre7</version>
 		</dependency>
 		 -->
+		<!-- Uncomment if using MySQL -->	
+		 		
+		<!-- <dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>6.0.6</version>
+		</dependency> -->
 		<!-- Elasticsearch dependencies - comment out if you don't want to start 
 			an elastic search data node -->
 		<dependency>
