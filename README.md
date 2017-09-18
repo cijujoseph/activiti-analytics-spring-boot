@@ -37,6 +37,16 @@ mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 \
 	
 	`java -jar target/activiti-analytics-spring-boot-1.0.0-SNAPSHOT.jar`
 	
+ * Run using docker (run command is just an example, adjust as per your env)
+ 
+ 	`mvn clean package`
+
+	`docker build -t activiti-analytics-spring-boot .`
+
+	`docker run --name aps-analytics -v /tmp/activiti-analytics-spring-boot/confs:/conf --rm  --net mydockernetwork  activiti-analytics-spring-boot`
+
+ 
+	
 * The app brings up an elasticsearch instance on startup. If you want to use a standalone elasticsearch, comment out the elasticsearch dependency in pom.xml.
 * If using the default elasticsearch with this app, the version number is 2.4.5 (this is dictated by the elastic springboot starter). If you are looking for a compatible Kibana version -> download 4.6.3 from https://www.elastic.co/downloads/past-releases/kibana-4-6-3
 
