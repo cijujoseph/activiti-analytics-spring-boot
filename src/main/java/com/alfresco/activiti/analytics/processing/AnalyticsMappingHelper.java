@@ -2,6 +2,9 @@ package com.alfresco.activiti.analytics.processing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
@@ -19,6 +22,12 @@ import org.activiti.engine.history.HistoricTaskInstance;
  */
 @Component("analyticsMappingHelper")
 public class AnalyticsMappingHelper {
+	
+	@Autowired
+	private JdbcTemplate activitiJdbcTemplate;
+	
+	@Value("${analytics.isEnterprise}")
+	private String isEnterprise;
 
 	protected static final Logger logger = LoggerFactory.getLogger(AnalyticsMappingHelper.class);
 
@@ -204,12 +213,23 @@ public class AnalyticsMappingHelper {
 			break;
 		case "activitiUserId":
 			if (value != null) {
-
 				if (mapping.get("format") != null
 						&& ((Map<String, Object>) mapping.get("format")).get("setIdMetadataFields") != null
 						&& ((Map<String, Object>) mapping.get("format")).get("setIdMetadataFields").equals(true)) {
 					try {
-
+						if (isEnterprise.equals("true")) {
+							String userQuery = "SELECT FIRST_NAME, LAST_NAME, EMAIL, ACCOUNT_TYPE, TENANT_ID, EXTERNAL_ID FROM USERS WHERE ID = " + value;
+							Map<String, Object> userObject = activitiJdbcTemplate.queryForMap(userQuery);
+							transformedMap.put(mapping.get("name")+"FirstName", userObject.get("FIRST_NAME"));
+							transformedMap.put(mapping.get("name")+"LastName", userObject.get("LAST_NAME"));
+							transformedMap.put(mapping.get("name")+"Email", userObject.get("EMAIL"));
+							if(userObject.get("EXTERNAL_ID") == null){
+								transformedMap.put(mapping.get("name")+"UserId", userObject.get("EMAIL"));
+							} else {
+								transformedMap.put(mapping.get("name")+"UserId", userObject.get("EXTERNAL_ID"));
+							}
+							transformedMap.put(mapping.get("name")+"TenantId", userObject.get("TENANT_ID"));
+						}
 					} catch (Exception e) {
 						logger.debug("error resolving user " + value);
 					}
