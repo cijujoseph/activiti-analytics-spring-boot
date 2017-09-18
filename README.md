@@ -3,7 +3,7 @@ Activiti must be running with both history and events turned on to have analytic
 
 * Change the application.properties to match your activiti installation
 
-* Currently tested only against Activiti running on H2, Oracle or Postgres databases. Queries in properties file and ProcessBatchPreparation.java may need to be altered if using a different database.
+* Currently tested only against Activiti running on H2, Oracle, MySQL or Postgres databases. Queries in properties file and ProcessBatchPreparation.java may need to be altered if using a different database.
 
 * If you are using Oracle DB, do the following to include oracle jdbc driver
 Download the Oracle jdbc driver and run the following command to add drive to your local maven repository:
