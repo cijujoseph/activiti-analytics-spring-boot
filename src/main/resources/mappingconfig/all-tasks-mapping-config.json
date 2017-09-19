@@ -124,6 +124,11 @@
             "name": "TaskOutcome",
             "type": "string",
             "fieldSource": "taskOutcome"
-        }
+        },
+        {
+            "name": "TaskPriority",
+            "type": "string",
+            "fieldSource": "taskInstanceMetaData"
+       	}
     ]
 }

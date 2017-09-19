@@ -177,6 +177,9 @@ public class AnalyticsMappingHelper {
 				case "TaskDefinitionKey":
 					value = taskInstanceDetails.getTaskDefinitionKey();
 					break;
+				case "TaskPriority":
+					value = taskInstanceDetails.getPriority();
+					break;
 				}
 			break;
 		case "defaultValue":
