@@ -225,6 +225,7 @@ public class AnalyticsMappingHelper {
 							Map<String, Object> userObject = activitiJdbcTemplate.queryForMap(userQuery);
 							transformedMap.put(mapping.get("name")+"FirstName", userObject.get("FIRST_NAME"));
 							transformedMap.put(mapping.get("name")+"LastName", userObject.get("LAST_NAME"));
+							transformedMap.put(mapping.get("name")+"Name", userObject.get("FIRST_NAME") + " " + userObject.get("LAST_NAME"));
 							transformedMap.put(mapping.get("name")+"Email", userObject.get("EMAIL"));
 							if(userObject.get("EXTERNAL_ID") == null){
 								transformedMap.put(mapping.get("name")+"UserId", userObject.get("EMAIL"));
