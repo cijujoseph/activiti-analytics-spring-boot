@@ -78,6 +78,10 @@ public class AnalyticsMappingHelper {
 				value = processInstanceDetails.getName();
 				break;
 				
+			case "ProcessDefinitionKey":
+				value = processInstanceDetails.getProcessDefinitionKey();
+				break;
+				
 			case "ProcessDefinitionId":
 				value = processInstanceDetails.getProcessDefinitionId();
 				break;

@@ -30,6 +30,11 @@
             "type": "string",
             "fieldSource": "processInstanceMetaData"
         },
+        {   
+            "name": "ProcessDefinitionKey",
+            "type": "string",
+            "fieldSource": "processInstanceMetaData"
+        },
         {
             "name": "ProcessDefinitionId",
             "type": "string",
