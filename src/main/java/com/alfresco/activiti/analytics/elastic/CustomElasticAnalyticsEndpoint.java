@@ -69,6 +69,7 @@ public class CustomElasticAnalyticsEndpoint implements CustomAnalyticsEndpoint {
 				elasticHTTPClient.execute(esUrl + indexName + "/bpmanalyticsevent/" + documentId + "/_update",
 						updatePayload, "POST");
 			} else {
+				logger.info(objectMapper.writeValueAsString(processMap));
 				elasticHTTPClient.execute(esUrl + indexName + "/bpmanalyticsevent/" + documentId,
 						objectMapper.writeValueAsString(processMap), "PUT");
 			}
@@ -78,9 +79,11 @@ public class CustomElasticAnalyticsEndpoint implements CustomAnalyticsEndpoint {
 				indexName = indexName + '-'
 						+ new SimpleDateFormat("yyyy.MM").format(processInstanceDetails.getStartTime());
 			}
+			logger.info(objectMapper.writeValueAsString(processMap));
 			elasticHTTPClient.execute(esUrl + indexName + "/bpmanalyticsevent/" + documentId,
 					objectMapper.writeValueAsString(processMap), "PUT");
 		}
+
 
 	}
 
@@ -103,7 +106,7 @@ public class CustomElasticAnalyticsEndpoint implements CustomAnalyticsEndpoint {
 	public String fetchWaterMark() {
 		try {
 
-			String response = elasticHTTPClient.execute(esUrl + "bpmanalyticseventlog/watermarkevent/0", null, "GET");
+			String response = elasticHTTPClient.execute(esUrl + "watermarklog/watermarkevent/0", null, "GET");
 			Map<String, Object> responseMap = new HashMap<String, Object>();
 			// convert JSON string to Map
 			responseMap = new ObjectMapper().readValue(response, new TypeReference<Map<String, Object>>() {
@@ -129,7 +132,7 @@ public class CustomElasticAnalyticsEndpoint implements CustomAnalyticsEndpoint {
 		payload.put("watermark", watermark);
 		try {
 			String jsonString = new ObjectMapper().writeValueAsString(payload);
-			elasticHTTPClient.execute(esUrl + "bpmanalyticseventlog/watermarkevent/0", jsonString, "POST");
+			elasticHTTPClient.execute(esUrl + "watermarklog/watermarkevent/0", jsonString, "POST");
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

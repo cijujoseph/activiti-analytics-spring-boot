@@ -24,9 +24,8 @@
           {
             "string_fields": {
               "mapping": {
-                "index": "not_analyzed",
                 "omit_norms": true,
-                "type": "string"
+                "type": "keyword"
               },
               "match_mapping_type": "string",
               "match": "*"
