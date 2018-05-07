@@ -69,7 +69,6 @@ public class CustomElasticAnalyticsEndpoint implements CustomAnalyticsEndpoint {
 				elasticHTTPClient.execute(esUrl + indexName + "/bpmanalyticsevent/" + documentId + "/_update",
 						updatePayload, "POST");
 			} else {
-				logger.info(objectMapper.writeValueAsString(processMap));
 				elasticHTTPClient.execute(esUrl + indexName + "/bpmanalyticsevent/" + documentId,
 						objectMapper.writeValueAsString(processMap), "PUT");
 			}
@@ -79,11 +78,9 @@ public class CustomElasticAnalyticsEndpoint implements CustomAnalyticsEndpoint {
 				indexName = indexName + '-'
 						+ new SimpleDateFormat("yyyy.MM").format(processInstanceDetails.getStartTime());
 			}
-			logger.info(objectMapper.writeValueAsString(processMap));
 			elasticHTTPClient.execute(esUrl + indexName + "/bpmanalyticsevent/" + documentId,
 					objectMapper.writeValueAsString(processMap), "PUT");
 		}
-
 
 	}
 
