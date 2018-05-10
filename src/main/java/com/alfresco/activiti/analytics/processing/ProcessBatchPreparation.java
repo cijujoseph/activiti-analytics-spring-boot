@@ -1,6 +1,9 @@
 package com.alfresco.activiti.analytics.processing;
 
-import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,151 +13,99 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import com.alfresco.activiti.analytics.entiity.ProcessDefinition;
+import com.alfresco.activiti.analytics.repository.ActivitiEventLogRepository;
+import com.alfresco.activiti.analytics.repository.ProcessDefinitionRepository;
+import com.alfresco.activiti.analytics.repository.ProcessedActivitiEventsRepository;
 
 @Component("processBatchPreparation")
 public class ProcessBatchPreparation {
 
 	protected static final Logger logger = LoggerFactory.getLogger(ProcessBatchPreparation.class);
-	
-	@Autowired
-	private JdbcTemplate activitiJdbcTemplate;
 
-	@Value("${analytics.excludedProcessList}")
-	private String excludedProcessList;
+	@Value("${analytics.excludedProcessDefinitionKeys}")
+	private String excludedProcessDefinitionKeys;
 
-	@Value("${analytics.sql.eventTable}")
-	private String eventTable;
-	
 	@Value("${analytics.sql.queryBatchSize}")
 	private String queryBatchSize;
-	
-	@Value("${analytics.sql.dbType}")
-	private String dbType;
-	
 
-	public Map<String, Object> getBatchMetadata(String lastUpdatedTimestamp) throws SQLException {
-		
+	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+
+	@Autowired
+	private ActivitiEventLogRepository activitiEventLogRepository;
+
+	@Autowired
+	private ProcessDefinitionRepository processDefinitionRepository;
+
+	@Autowired(required = false)
+	private ProcessedActivitiEventsRepository processedActivitiEventsRepository;
+
+	@Value("${analytics.isEnterprise}")
+	private String isEnterprise;
+
+	@Value("${analytics.eventSource.isProcessedEventsTable}")
+	private String isProcessedEventsTable;
+
+	public Map<String, Object> getBatchMetadata(String lastUpdatedTimestamp) throws ParseException {
+
 		Map<String, Object> batchMetadata = new HashMap<String, Object>();
 		String maxTimeStamp = getMostRecentTimestamp(lastUpdatedTimestamp);
 
 		if (maxTimeStamp != null) {
-			batchMetadata.put("newEventsExist", true);
-			batchMetadata.put("toTimestamp", maxTimeStamp);
-
 			// Get a list of processes instances
-			List<Map<String, Object>> processIdQueryList = getProcessIdList(lastUpdatedTimestamp,
-					maxTimeStamp);
-
-			batchMetadata.put("processIdList", processIdQueryList);
+			List<Map<String, Object>> processIdQueryList = getProcessIdList(lastUpdatedTimestamp, maxTimeStamp);
+			if (processIdQueryList != null && processIdQueryList.size() > 0) {
+				batchMetadata.put("newEventsExist", true);
+				batchMetadata.put("toTimestamp", maxTimeStamp);
+				batchMetadata.put("processIdList", processIdQueryList);
+			} else {
+				batchMetadata.put("newEventsExist", false);
+			}
 			logger.info("done!");
 
 		} else {
 			batchMetadata.put("newEventsExist", false);
 		}
 
-	
 		return batchMetadata;
 	}
 
-	private List<Map<String, Object>> getProcessIdList(String lastUpdatedTimestamp,
-			String maxTimeStamp) {
+	private List<String> getExcludedProcessIds() {
 
-		String excludedProcessListQuery = createExcludedProcessQueryStatement();
-		// Get the list of processes.
-		// Tested databases are H2, Oracle and PostgreSQL. The query may need to be modified to work with other databases
-		String processAndTaskQuery = "";
-		if (dbType.equals("Oracle")) {
-			processAndTaskQuery = "select DISTINCT PROC_INST_ID_ as processInstanceId, "
-				+ "PROC_DEF_ID_ as processDefinitionId FROM " + eventTable + " WHERE " +
-				// Exclude those processes in the exclude list
-				excludedProcessListQuery +
-				// Exclude any adhoc task data resulting in null rows
-				"PROC_DEF_ID_ IS NOT NULL " +
-				// get only those data which has been created since the last
-				// processing
-				"AND TIME_STAMP_ > to_timestamp('" + lastUpdatedTimestamp + "','YYYY-MM-DD HH24:MI:SS.FF') " + 
-				"AND TIME_STAMP_ <= to_timestamp('" + maxTimeStamp + "','YYYY-MM-DD HH24:MI:SS.FF') ";
-		} else {
-			processAndTaskQuery = "select DISTINCT PROC_INST_ID_ as processInstanceId, "
-					+ "PROC_DEF_ID_ as processDefinitionId FROM " + eventTable + " WHERE " +
-					// Exclude those processes in the exclude list
-					excludedProcessListQuery +
-					// Exclude any adhoc task data resulting in null rows
-					"PROC_DEF_ID_ IS NOT NULL " +
-					// get only those data which has been created since the last
-					// processing
-					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' " + "AND TIME_STAMP_ <= '" + maxTimeStamp + "'";
+		List<ProcessDefinition> excludedProcessDefinitions = processDefinitionRepository
+				.findByProcessDefinitionKeyIn(Arrays.asList(excludedProcessDefinitionKeys.split("\\s*,\\s*")));
+		List<String> excludedIdList = new ArrayList<String>();
+		for (ProcessDefinition excludedProcessDefinition : excludedProcessDefinitions) {
+			excludedIdList.add(excludedProcessDefinition.getProcessDefinitionId());
 		}
-		logger.debug("getProcessIdList() SQL: " + processAndTaskQuery);
-		List<Map<String, Object>> processIdQueryList = activitiJdbcTemplate.queryForList(processAndTaskQuery);
-		logger.debug("getProcessIdList() SQL Response: " + processIdQueryList);
+		return excludedIdList;
+	}
+
+	private List<Map<String, Object>> getProcessIdList(String lastUpdatedTimestamp, String maxTimeStamp)
+			throws ParseException {
+		List<Map<String, Object>> processIdQueryList;
+		if (isEnterprise.equals("true") && isProcessedEventsTable.equals("true")) {
+			processIdQueryList = processedActivitiEventsRepository.findUniqueProcessList(df.parse(lastUpdatedTimestamp),
+					df.parse(maxTimeStamp), getExcludedProcessIds());
+		} else {
+
+			processIdQueryList = activitiEventLogRepository.findUniqueProcessList(df.parse(lastUpdatedTimestamp),
+					df.parse(maxTimeStamp), getExcludedProcessIds());
+		}
+		logger.info("getProcessIdList() SQL Response: " + processIdQueryList);
 		return processIdQueryList;
 	}
 
-	private String getMostRecentTimestamp(String lastUpdatedTimestamp) throws SQLException {
-
-		String excludedProcessListQuery = createExcludedProcessQueryStatement();
-		
-		String sql;
-		if (dbType.equals("PostgreSQL") || dbType.equals("MySQL")) {
-			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TIME_STAMP_ FROM " +
-			// Select from processed table assuming the activiti analytics
-			// process is moving data to this table
-					eventTable + "  WHERE " +
-					// Exclude those processes in the exclude list
-					excludedProcessListQuery +
-					// Exclude any ad-hoc task data
-					"PROC_DEF_ID_ IS NOT NULL " +
-					// get only those data which has been created since the last
-					// processing
-					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' "
-					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC limit "+queryBatchSize+") AS SUBQUERY";
-		} else if (dbType.equals("Oracle")) {
-			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TIME_STAMP_ FROM " +
-			// Select from processed table assuming the activiti analytics
-			// process is moving data to this table
-					eventTable + "  WHERE " +
-					// Exclude those processes in the exclude list
-					excludedProcessListQuery +
-					// Exclude any ad-hoc task data
-					"PROC_DEF_ID_ IS NOT NULL " +
-					// get only those data which has been created since the last
-					// processing
-					"AND TIME_STAMP_ >  to_timestamp('" + lastUpdatedTimestamp + "','YYYY-MM-DD HH24:MI:SS.FF')  "
-					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC ) WHERE ROWNUM <= "+ queryBatchSize;
+	private String getMostRecentTimestamp(String lastUpdatedTimestamp) throws ParseException {
+		if (isEnterprise.equals("true") && isProcessedEventsTable.equals("true")) {
+			return processedActivitiEventsRepository.getMaxTimestamp(df.parse(lastUpdatedTimestamp), queryBatchSize,
+					getExcludedProcessIds());
 		} else {
-			// H2 Query. This will need to be modified to work with other databases
-			sql = "select MAX(TIME_STAMP_) AS TO_TIMESTAMP FROM (SELECT TOP "+queryBatchSize+" TIME_STAMP_ FROM " +
-			// Select from processed table assuming the activiti analytics
-			// process is moving data to this table
-					eventTable + "  WHERE " +
-					// Exclude those processes in the exclude list
-					excludedProcessListQuery +
-					// Exclude any ad-hoc task data
-					"PROC_DEF_ID_ IS NOT NULL " +
-					// get only those data which has been created since the last
-					// processing
-					"AND TIME_STAMP_ > '" + lastUpdatedTimestamp + "' "
-					+ " GROUP BY TIME_STAMP_ ORDER BY TIME_STAMP_ ASC)";
+			return activitiEventLogRepository.getMaxTimestamp(df.parse(lastUpdatedTimestamp), queryBatchSize,
+					getExcludedProcessIds());
 		}
-		
-		logger.debug("getMostRecentTimestamp() SQL: " + sql);
-		List<Map<String, Object>> rows = activitiJdbcTemplate.queryForList(sql);
-		logger.debug("getMostRecentTimestamp() SQL Response: " + rows);
-		return rows.get(0).get("TO_TIMESTAMP") != null
-				? ((java.sql.Timestamp) rows.get(0).get("TO_TIMESTAMP")).toString() : null;
-	}
-
-	private String createExcludedProcessQueryStatement() {
-		List<String> items = Arrays.asList(excludedProcessList.split("\\s*,\\s*"));
-		StringBuilder excludedProcessListStringBuilder = new StringBuilder();
-		for (String item : items) {
-			excludedProcessListStringBuilder.append("PROC_DEF_ID_ NOT LIKE '" + item + "' AND ");
-		}
-		logger.debug(excludedProcessListStringBuilder.toString());
-		return excludedProcessListStringBuilder.toString();
 	}
 
 }
