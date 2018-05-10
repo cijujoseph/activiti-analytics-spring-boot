@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.alfresco.activiti.analytics.CustomAnalyticsEndpoint;
 import com.alfresco.activiti.analytics.conf.MappingConfiguration;
-import com.alfresco.activiti.analytics.entiity.ActivitiEventAbstract;
+import com.alfresco.activiti.analytics.entity.ActivitiEventAbstract;
 import com.alfresco.activiti.analytics.repository.ActivitiEventLogRepository;
 import com.alfresco.activiti.analytics.repository.ProcessedActivitiEventsRepository;
 

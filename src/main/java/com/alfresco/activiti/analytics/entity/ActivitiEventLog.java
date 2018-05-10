@@ -1,4 +1,4 @@
-package com.alfresco.activiti.analytics.entiity;
+package com.alfresco.activiti.analytics.entity;
 
 
 
