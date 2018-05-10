@@ -9,15 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.alfresco.activiti.analytics.entity.ProcessDefinition;
 import com.alfresco.activiti.analytics.repository.ActivitiEventLogRepository;
-import com.alfresco.activiti.analytics.repository.ProcessDefinitionRepository;
 import com.alfresco.activiti.analytics.repository.ProcessedActivitiEventsRepository;
 
 @Component("processBatchPreparation")
@@ -37,7 +36,7 @@ public class ProcessBatchPreparation {
 	private ActivitiEventLogRepository activitiEventLogRepository;
 
 	@Autowired
-	private ProcessDefinitionRepository processDefinitionRepository;
+	private RepositoryService repositoryService;
 
 	@Autowired(required = false)
 	private ProcessedActivitiEventsRepository processedActivitiEventsRepository;
@@ -74,11 +73,13 @@ public class ProcessBatchPreparation {
 
 	private List<String> getExcludedProcessIds() {
 
-		List<ProcessDefinition> excludedProcessDefinitions = processDefinitionRepository
-				.findByProcessDefinitionKeyIn(Arrays.asList(excludedProcessDefinitionKeys.split("\\s*,\\s*")));
+		String[] excludedProcessDefinitionKeyArray = excludedProcessDefinitionKeys.split("\\s*,\\s*");
 		List<String> excludedIdList = new ArrayList<String>();
-		for (ProcessDefinition excludedProcessDefinition : excludedProcessDefinitions) {
-			excludedIdList.add(excludedProcessDefinition.getProcessDefinitionId());
+		for (String excludedProcessDefinitionKey: excludedProcessDefinitionKeyArray) {
+			List<ProcessDefinition> excludedProcessDefinitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(excludedProcessDefinitionKey).list();
+			for (ProcessDefinition excludedProcessDefinition : excludedProcessDefinitions) {
+				excludedIdList.add(excludedProcessDefinition.getId());
+			}
 		}
 		return excludedIdList;
 	}
