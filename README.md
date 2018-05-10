@@ -1,3 +1,5 @@
+## Upgraded the project to work with Elastic 6.x...readme is yet to be updated with the new kibana setup and conf. This change might cause the master branch to not work with older versions of ES.
+
 # activiti-analytics-spring-boot
 Activiti must be running with both history and events turned on to have analytics data
 
