@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.alfresco.activiti.analytics.entiity.ActivitiEventAbstract;
-import com.alfresco.activiti.analytics.entiity.ProcessedActivitiEvents;
+import com.alfresco.activiti.analytics.entity.ActivitiEventAbstract;
+import com.alfresco.activiti.analytics.entity.ProcessedActivitiEvents;
 
 public interface ProcessedActivitiEventsRepository extends JpaRepository<ProcessedActivitiEvents, Long> {
 	

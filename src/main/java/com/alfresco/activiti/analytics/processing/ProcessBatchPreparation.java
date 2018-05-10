@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.alfresco.activiti.analytics.entiity.ProcessDefinition;
+import com.alfresco.activiti.analytics.entity.ProcessDefinition;
 import com.alfresco.activiti.analytics.repository.ActivitiEventLogRepository;
 import com.alfresco.activiti.analytics.repository.ProcessDefinitionRepository;
 import com.alfresco.activiti.analytics.repository.ProcessedActivitiEventsRepository;

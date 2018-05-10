@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.alfresco.activiti.analytics.entiity.User;
+import com.alfresco.activiti.analytics.entity.User;
 import com.alfresco.activiti.analytics.repository.UserRepository;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
