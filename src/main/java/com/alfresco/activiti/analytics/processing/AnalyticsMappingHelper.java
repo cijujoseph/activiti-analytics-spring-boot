@@ -4,8 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import com.alfresco.activiti.analytics.entiity.User;
+import com.alfresco.activiti.analytics.repository.UserRepository;
+
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.text.ParseException;
@@ -22,10 +25,10 @@ import org.activiti.engine.history.HistoricTaskInstance;
  */
 @Component("analyticsMappingHelper")
 public class AnalyticsMappingHelper {
-	
-	@Autowired
-	private JdbcTemplate activitiJdbcTemplate;
-	
+
+	@Autowired(required = false)
+	private UserRepository userRepository;
+
 	@Value("${analytics.isEnterprise}")
 	private String isEnterprise;
 
@@ -73,15 +76,15 @@ public class AnalyticsMappingHelper {
 			case "BusinessKey":
 				value = processInstanceDetails.getBusinessKey();
 				break;
-			
+
 			case "ProcessInstanceName":
 				value = processInstanceDetails.getName();
 				break;
-				
+
 			case "ProcessDefinitionKey":
 				value = processInstanceDetails.getProcessDefinitionKey();
 				break;
-				
+
 			case "ProcessDefinitionId":
 				value = processInstanceDetails.getProcessDefinitionId();
 				break;
@@ -142,49 +145,49 @@ public class AnalyticsMappingHelper {
 			break;
 		case "taskInstanceMetaData":
 			switch ((String) mapping.get("name")) {
-				case "TaskStartDate":
-					value = taskInstanceDetails.getStartTime();
-					break;
-				case "TaskName":
-					value = taskInstanceDetails.getName();
-					break;
-				case "TaskEndDate":
-					value = taskInstanceDetails.getEndTime();
-					break;
-				case "TaskClaimDate":
-					value = taskInstanceDetails.getClaimTime();
-					break;
-				case "TaskDueDate":
-					value = taskInstanceDetails.getDueDate();
-					break;
-				case "TaskDurationInWords":
-					value = taskInstanceDetails.getDurationInMillis();
-					break;
-				case "TaskDurationSinceClaimedInWords":
-					value = taskInstanceDetails.getWorkTimeInMillis();
-					break;
-				case "TaskDescription":
-					value = taskInstanceDetails.getDescription();
-					break;
-				case "TaskId":
-					value = taskInstanceDetails.getId();
-					break;
-				case "Assignee":
-					value = taskInstanceDetails.getAssignee();
-					break;
-				case "TaskCompleteReason":
-					value = taskInstanceDetails.getDeleteReason();
-					break;
-				case "FormKey":
-					value = taskInstanceDetails.getFormKey();
-					break;
-				case "TaskDefinitionKey":
-					value = taskInstanceDetails.getTaskDefinitionKey();
-					break;
-				case "TaskPriority":
-					value = taskInstanceDetails.getPriority();
-					break;
-				}
+			case "TaskStartDate":
+				value = taskInstanceDetails.getStartTime();
+				break;
+			case "TaskName":
+				value = taskInstanceDetails.getName();
+				break;
+			case "TaskEndDate":
+				value = taskInstanceDetails.getEndTime();
+				break;
+			case "TaskClaimDate":
+				value = taskInstanceDetails.getClaimTime();
+				break;
+			case "TaskDueDate":
+				value = taskInstanceDetails.getDueDate();
+				break;
+			case "TaskDurationInWords":
+				value = taskInstanceDetails.getDurationInMillis();
+				break;
+			case "TaskDurationSinceClaimedInWords":
+				value = taskInstanceDetails.getWorkTimeInMillis();
+				break;
+			case "TaskDescription":
+				value = taskInstanceDetails.getDescription();
+				break;
+			case "TaskId":
+				value = taskInstanceDetails.getId();
+				break;
+			case "Assignee":
+				value = taskInstanceDetails.getAssignee();
+				break;
+			case "TaskCompleteReason":
+				value = taskInstanceDetails.getDeleteReason();
+				break;
+			case "FormKey":
+				value = taskInstanceDetails.getFormKey();
+				break;
+			case "TaskDefinitionKey":
+				value = taskInstanceDetails.getTaskDefinitionKey();
+				break;
+			case "TaskPriority":
+				value = taskInstanceDetails.getPriority();
+				break;
+			}
 			break;
 		case "defaultValue":
 			value = mapping.get("defaultValue");
@@ -225,18 +228,17 @@ public class AnalyticsMappingHelper {
 						&& ((Map<String, Object>) mapping.get("format")).get("setIdMetadataFields").equals(true)) {
 					try {
 						if (isEnterprise.equals("true")) {
-							String userQuery = "SELECT FIRST_NAME, LAST_NAME, EMAIL, ACCOUNT_TYPE, TENANT_ID, EXTERNAL_ID FROM USERS WHERE ID = " + value;
-							Map<String, Object> userObject = activitiJdbcTemplate.queryForMap(userQuery);
-							transformedMap.put(mapping.get("name")+"FirstName", userObject.get("FIRST_NAME"));
-							transformedMap.put(mapping.get("name")+"LastName", userObject.get("LAST_NAME"));
-							transformedMap.put(mapping.get("name")+"Name", userObject.get("FIRST_NAME") + " " + userObject.get("LAST_NAME"));
-							transformedMap.put(mapping.get("name")+"Email", userObject.get("EMAIL"));
-							if(userObject.get("EXTERNAL_ID") == null){
-								transformedMap.put(mapping.get("name")+"UserId", userObject.get("EMAIL"));
+							User user = userRepository.findOne(Long.parseLong(value.toString()));
+							transformedMap.put(mapping.get("name") + "FirstName", user.getFirstName());
+							transformedMap.put(mapping.get("name") + "LastName", user.getLastName());
+							transformedMap.put(mapping.get("name") + "Name", user.getFullName());
+							transformedMap.put(mapping.get("name") + "Email", user.getEmail());
+							if (user.getExternalId() == null) {
+								transformedMap.put(mapping.get("name") + "UserId", user.getEmail());
 							} else {
-								transformedMap.put(mapping.get("name")+"UserId", userObject.get("EXTERNAL_ID"));
+								transformedMap.put(mapping.get("name") + "UserId", user.getExternalId());
 							}
-							transformedMap.put(mapping.get("name")+"TenantId", userObject.get("TENANT_ID"));
+							transformedMap.put(mapping.get("name") + "TenantId", user.getTenantId());
 						}
 					} catch (Exception e) {
 						logger.debug("error resolving user " + value);

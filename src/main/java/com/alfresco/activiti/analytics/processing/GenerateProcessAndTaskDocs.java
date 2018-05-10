@@ -2,28 +2,28 @@ package com.alfresco.activiti.analytics.processing;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import com.alfresco.activiti.analytics.CustomAnalyticsEndpoint;
 import com.alfresco.activiti.analytics.conf.MappingConfiguration;
+import com.alfresco.activiti.analytics.entiity.ActivitiEventAbstract;
+import com.alfresco.activiti.analytics.repository.ActivitiEventLogRepository;
+import com.alfresco.activiti.analytics.repository.ProcessedActivitiEventsRepository;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.h2.jdbc.JdbcClob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -54,16 +54,18 @@ public class GenerateProcessAndTaskDocs {
 	AnalyticsMappingHelper analyticsMappingHelper;
 
 	@Autowired
-	private ObjectMapper objectMapper;
-	
-	@Autowired
-	private JdbcTemplate activitiJdbcTemplate;
+	private ActivitiEventLogRepository activitiEventLogRepository;
 
-	@Value("${analytics.sql.eventDataQuery}")
-	private String eventDataQuery;
+	@Autowired(required = false)
+	private ProcessedActivitiEventsRepository processedActivitiEventsRepository;
+
+	@Value("${analytics.isEnterprise}")
+	private String isEnterprise;
+
+	@Value("${analytics.eventSource.isProcessedEventsTable}")
+	private String isProcessedEventsTable;
 
 	public void execute(Map<String, Object> processInstance) throws Exception {
-
 		logger.debug(processInstance.toString());
 
 		Map<String, Object> processInstanceData = createProcessMetaData(processInstance);
@@ -109,40 +111,34 @@ public class GenerateProcessAndTaskDocs {
 
 	public List<Map<String, Object>> fetchProcessInstanceEventData(Map<String, Object> processInstanceData)
 			throws Exception {
+		String[] typeArray = { "HISTORIC_PROCESS_INSTANCE_CREATED", "HISTORIC_PROCESS_INSTANCE_ENDED",
+				"PROCESSINSTANCE_START", "PROCESSINSTANCE_END", "TASK_CREATED", "TASK_ASSIGNED", "TASK_COMPLETED" };
+		List<String> typeList = Arrays.asList(typeArray);
 
-
-		String sql = eventDataQuery + " WHERE PROC_INST_ID_ = '" + processInstanceData.get("processInstanceId")
-				+ "' AND TYPE_ IN ('PROCESSINSTANCE_START', 'PROCESSINSTANCE_END', 'TASK_CREATED', 'TASK_ASSIGNED', 'TASK_COMPLETED')";
-		logger.debug("fetchProcessInstanceEventData() SQL: " + sql);
-		List<Map<String, Object>> rows = activitiJdbcTemplate.queryForList(sql);
-		
-		return handleClob(rows);
-	}
-
-	public List<Map<String, Object>> handleClob(List<Map<String, Object>> rows) throws Exception {
-
-		List<Map<String, Object>> newList = new ArrayList<Map<String, Object>>();
-
-		for (Map<String, Object> map : rows) {
-			Map<String, Object> transformedMap = new HashMap<String, Object>();
-
-			for (String name : map.keySet()) {
-
-				Object value = map.get(name);
-
-				if (value instanceof JdbcClob) {
-
-					String clobString = org.apache.commons.io.IOUtils.toString(((JdbcClob) value).getCharacterStream());
-					// value =
-					// org.apache.commons.lang.StringEscapeUtils.unescapeJava(clobString);
-					value = clobString;
-
-				}
-				transformedMap.put(name, value);
-			}
-			newList.add(transformedMap);
+		List<ActivitiEventAbstract> events = activitiEventLogRepository.findByTypeInAndProcessInstanceId(typeList,
+				(String) processInstanceData.get("procInstanceId"));
+		if (isEnterprise.equals("true") && isProcessedEventsTable.equals("true")) {
+			events = processedActivitiEventsRepository.findByTypeInAndProcessInstanceId(typeList,
+					(String) processInstanceData.get("procInstanceId"));
+		} else {
+			events = activitiEventLogRepository.findByTypeInAndProcessInstanceId(typeList,
+					(String) processInstanceData.get("procInstanceId"));
 		}
-		return newList;
+
+		List<Map<String, Object>> rows = new ArrayList<>();
+		for (ActivitiEventAbstract event : events) {
+			Map<String, Object> eventMap = new HashMap<String, Object>();
+			eventMap.put("LOG_NR_", event.getLogNr());
+			eventMap.put("TYPE_", event.getType());
+			eventMap.put("PROC_DEF_ID_", event.getProcessDefinitionId());
+			eventMap.put("PROC_INST_ID_", event.getProcessInstanceId());
+			eventMap.put("TASK_ID_", event.getTaskId());
+			eventMap.put("TIME_STAMP_", event.getTimestamp());
+			eventMap.put("USER_ID_", event.getUserId());
+			eventMap.put("DATA_", new String(event.getData()));
+			rows.add(eventMap);
+		}
+		return rows;
 	}
 
 	@SuppressWarnings("unchecked")
