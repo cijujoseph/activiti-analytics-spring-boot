@@ -6,62 +6,63 @@ Activiti must be running with both history and events turned on to have analytic
 * If you are using Oracle DB, do the following to include oracle jdbc driver
 Download the Oracle jdbc driver and run the following command to add drive to your local maven repository:
 
-	```
-mvn install:install-file -DgroupId=<groupId> -DartifactId=<artifactId> \-Dversion=<version> -Dpackaging=jar -Dfile=<jar-file-name and location> -DgeneratePom=true
-	```
+	`
+mvn install:install-file -DgroupId=<groupId> -DartifactId=<artifactId> -Dversion=<version> -Dpackaging=jar -Dfile=<jar-file-name and location> -DgeneratePom=true
+	`
 Eg: command and pom.xml entry:
 
-	```
-	mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 \-Dversion=12.2.0.1 -Dpackaging=jar -Dfile=ojdbc8.jar -DgeneratePom=true
-	```
+	`
+	mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 -Dversion=12.2.0.1 -Dpackaging=jar -Dfile=ojdbc8.jar -DgeneratePom=true
+	`
 
-	```
+	`
 	<dependency>
 		<groupId>com.oracle.jdbc</groupId>
 		<artifactId>ojdbc8</artifactId>
 		<version>12.2.0.1</version>
 	</dependency>
-	```
+	`
 
 * Run using the following command 
 	
-	```
+	`
 	mvn clean spring-boot:run 
-	```
+	`
 	
 * Running using the packaged jar
 	
-	```
+	`
 	mvn clean package
-	```
-	
-	```
+	`
+
+	`
 	java -jar target/activiti-analytics-spring-boot-1.0.0-SNAPSHOT.jar
-	```
+	`
 * Run using docker (run command is just an example, adjust as per your env)
  
- 	```
+ 	`
  	mvn clean package
- 	```
+ 	`
 
-	```
+	`
 	docker build -t activiti-analytics-spring-boot .
-	```
-	```
-	docker run --name aps-analytics -v /tmp/activiti-analytics-spring-boot/confs:/conf \D--rm  --net mydockernetwork  activiti-analytics-spring-boot
-	```
+	`
+	
+	`
+	docker run --name aps-analytics -v /tmp/activiti-analytics-spring-boot/confs:/conf --rm  --net mydockernetwork  activiti-analytics-spring-boot
+	`
 	
 * Prerequisite - Elasticsearch must be started prior to starting this app. Easiest way is to get it up and running is using Elastic docker.
 
-	```
-	docker run --name elasticsearch -p 9200:9200 -e "http.host=0.0.0.0" -e\D "transport.host=127.0.0.1" -e "xpack.security.enabled=false" --net\D mydockernetwork 	docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-	```
+	`
+	docker run --name elasticsearch -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" --net mydockernetwork 	docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+	`
 
 
 # Set up some sample visualizations.
 * Easiest way to start an instance of Kibana is using docker!
 ```
-docker run --name kibana-6.2.4 --net mydockernetwork  \D-e XPACK_SECURITY_ENABLED=false -p 5601:5601 \Ddocker.elastic.co/kibana/kibana:6.2.4
+docker run --name kibana-6.2.4 --net mydockernetwork  -e XPACK_SECURITY_ENABLED=false -p 5601:5601 docker.elastic.co/kibana/kibana:6.2.4
 ```
 * Once you have Kibana running open http://localhost:5601/ (default host and port of Kibana unless you changed it) in your browser.
 
