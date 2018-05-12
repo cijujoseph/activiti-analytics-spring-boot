@@ -60,9 +60,10 @@ Download the Oracle jdbc driver and run the following commands to add driver to 
 
 # Set up some sample visualizations.
 * Easiest way to start an instance of Kibana is using docker!
-```
+
+`
 docker run --name kibana-6.2.4 --net mydockernetwork  -e XPACK_SECURITY_ENABLED=false -p 5601:5601 docker.elastic.co/kibana/kibana:6.2.4
-```
+`
 * Once you have Kibana running open http://localhost:5601/ (default host and port of Kibana unless you changed it) in your browser.
 
 * **Run few processes in APS to make sure we have some data in Elasticsearch to create some dashboards. if you miss this step, you won't be able to create the following steps!**
