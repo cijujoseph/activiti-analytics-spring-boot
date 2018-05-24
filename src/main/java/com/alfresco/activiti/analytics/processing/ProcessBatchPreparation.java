@@ -81,6 +81,9 @@ public class ProcessBatchPreparation {
 				excludedIdList.add(excludedProcessDefinition.getId());
 			}
 		}
+		if(excludedIdList.size()==0){
+			excludedIdList.add("");
+		}
 		return excludedIdList;
 	}
 
