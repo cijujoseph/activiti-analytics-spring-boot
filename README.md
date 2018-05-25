@@ -1,4 +1,8 @@
 # activiti-analytics-spring-boot
+
+Please find below the solution diagram. The source of the diagram created using [sequencediagram.org](https://sequencediagram.org) can be found [here](https://goo.gl/LeNbqD)
+![Index Pattern 1](images/Sequence Flow.png)
+
 Activiti must be running with both history and events turned on to have analytics data
 
 * Change the application.properties to match your activiti installation
