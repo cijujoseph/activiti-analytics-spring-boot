@@ -35,7 +35,6 @@
             "variable_mappings": {
               "path_match": "variables.*",
               "mapping": {
-                "index": "not_analyzed",
                 "type": "{dynamic_type}"
               }
             }
@@ -44,7 +43,6 @@
             "startprocess_variable_mappings": {
               "path_match": "processStartVariables.*",
               "mapping": {
-                "index": "not_analyzed",
                 "type": "{dynamic_type}"
               }
             }
@@ -53,7 +51,6 @@
             "custom_processmappings": {
               "path_match": "processSpecificCustomMap.*",
               "mapping": {
-                "index": "not_analyzed",
                 "type": "{dynamic_type}"
               }
             }
@@ -62,7 +59,6 @@
             "task_complete_variable_mappings": {
               "path_match": "taskCompleteVariables.*",
               "mapping": {
-                "index": "not_analyzed",
                 "type": "{dynamic_type}"
               }
             }

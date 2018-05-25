@@ -266,7 +266,15 @@ public class GenerateProcessAndTaskDocs {
 									}
 								}
 							}
-							processMap.put("processSpecificCustomMap", processSpecificData);
+
+							Boolean createProcesssMappingNode = (Boolean)processSpecificMapping.get("createProcesssMappingNode");
+							if(createProcesssMappingNode!=null &&
+									createProcesssMappingNode ){
+								processMap.put("processSpecificCustomMap", processSpecificData);
+							} else {
+								processMap.putAll(processSpecificData);
+							}
+
 						}
 					}
 				}

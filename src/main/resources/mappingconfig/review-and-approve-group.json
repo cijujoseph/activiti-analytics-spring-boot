@@ -1,5 +1,6 @@
 {
     "processName": "Review and Approve - Group",
+    "createProcesssMappingNode": false,
     "fileNamePrefix": "not used in the current implementation. used for some reporting implementation elsewhere",
     "header": ["not used in the current implementation. used for some reporting implementation elsewhere"],
     "mappings": [
@@ -10,19 +11,18 @@
             "fieldSource": "variable"
         },
         {
-            "originalName": "taskdescription",
-            "name": "TaskDescription",
+            "originalName": "stage",
+            "name": "ProcessStage",
             "type": "string",
             "fieldSource": "variable"
         },
         {
             "originalName": "duedate",
-            "name": "DueDate",
+            "name": "ProcessDueDate",
             "type": "dateTime",
             "fieldSource": "variable",
             "format": {
                 "keepOriginalValue": false,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss'Z'",
                 "targetFormat": "dd-MM-yyyy"
             }
         }
