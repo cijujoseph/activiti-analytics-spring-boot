@@ -1,7 +1,6 @@
 package com.alfresco.activiti.analytics.entity;
 
 
-
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -22,11 +21,11 @@ public abstract class ActivitiEventAbstract implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="log_nr_")
-	private String logNr;
+    @Column(name = "log_nr_")
+    private String logNr;
 
     @JsonIgnore
-    @Column(name="type_")
+    @Column(name = "type_")
     private String type;
 
     @Column(name = "proc_def_id_")
@@ -35,92 +34,92 @@ public abstract class ActivitiEventAbstract implements Serializable {
     @Column(name = "proc_inst_id_")
     private String processInstanceId;
 
-    @Column(name="execution_id_")
+    @Column(name = "execution_id_")
     private String executionId;
-    
-    @Column(name="task_id_")
+
+    @Column(name = "task_id_")
     private String taskId;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="time_stamp_")
+    @Column(name = "time_stamp_")
     private Date timestamp;
-    
-    @Column(name="user_id_")
+
+    @Column(name = "user_id_")
     private String userId;
-    
+
     @Column(name = "data_")
     @Lob
     private byte[] data;
 
-	public String getLogNr() {
-		return logNr;
-	}
+    public String getLogNr() {
+        return logNr;
+    }
 
-	public void setLogNr(String logNr) {
-		this.logNr = logNr;
-	}
+    public void setLogNr(String logNr) {
+        this.logNr = logNr;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getProcessDefinitionId() {
-		return processDefinitionId;
-	}
+    public String getProcessDefinitionId() {
+        return processDefinitionId;
+    }
 
-	public void setProcessDefinitionId(String processDefinitionId) {
-		this.processDefinitionId = processDefinitionId;
-	}
+    public void setProcessDefinitionId(String processDefinitionId) {
+        this.processDefinitionId = processDefinitionId;
+    }
 
-	public String getProcessInstanceId() {
-		return processInstanceId;
-	}
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
 
-	public void setProcessInstanceId(String processInstanceId) {
-		this.processInstanceId = processInstanceId;
-	}
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
 
-	public String getExecutionId() {
-		return executionId;
-	}
+    public String getExecutionId() {
+        return executionId;
+    }
 
-	public void setExecutionId(String executionId) {
-		this.executionId = executionId;
-	}
+    public void setExecutionId(String executionId) {
+        this.executionId = executionId;
+    }
 
-	public String getTaskId() {
-		return taskId;
-	}
+    public String getTaskId() {
+        return taskId;
+    }
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
 
-	public Date getTimestamp() {
-		return timestamp;
-	}
+    public Date getTimestamp() {
+        return timestamp;
+    }
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
-	public void setData(byte[] data) {
-		this.data = data;
-	}
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 }

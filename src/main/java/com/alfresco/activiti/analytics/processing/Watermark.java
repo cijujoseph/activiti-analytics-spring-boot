@@ -10,26 +10,26 @@ import org.springframework.stereotype.Component;
 @Component("watermark")
 public class Watermark {
 
-	protected static final Logger logger = LoggerFactory.getLogger(Watermark.class);
+    protected static final Logger logger = LoggerFactory.getLogger(Watermark.class);
 
-	@Autowired
-	CustomAnalyticsEndpoint customAnalyticsEndpoint;
+    @Autowired
+    CustomAnalyticsEndpoint customAnalyticsEndpoint;
 
-	@Value("${analytics.default.fromTimestamp}")
-	private String fromTimestamp;
+    @Value("${analytics.default.fromTimestamp}")
+    private String fromTimestamp;
 
-	public String fetchWatermark() {
+    public String fetchWatermark() {
 
-		String waterMark = customAnalyticsEndpoint.fetchWaterMark();
-		if (waterMark != null) {
-			return waterMark;
-		} else {
-			return fromTimestamp;
-		}
-	}
+        String waterMark = customAnalyticsEndpoint.fetchWaterMark();
+        if (waterMark != null) {
+            return waterMark;
+        } else {
+            return fromTimestamp;
+        }
+    }
 
-	public void updateWatermark(String toTimestamp) {
-		customAnalyticsEndpoint.updateWaterMark(toTimestamp);
-	}
+    public void updateWatermark(String toTimestamp) {
+        customAnalyticsEndpoint.updateWaterMark(toTimestamp);
+    }
 
 }

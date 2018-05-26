@@ -1,34 +1,37 @@
 package com.alfresco.activiti.analytics.conf;
 
+import com.alfresco.activiti.analytics.conf.json.process.AllProcessesMapping;
+import com.alfresco.activiti.analytics.conf.json.process.EndState;
+import com.alfresco.activiti.analytics.conf.json.task.AllTasksMapping;
+
 import java.util.List;
-import java.util.Map;
 
 public class MappingConfiguration {
-	private List<Map<String, Object>> endStateConfigMap;
-	private Map<String, Object> allProcessConfigMap;
-	private Map<String, Object> allTasksConfigMap;
+    private List<EndState> endStateConfig;
+    private AllProcessesMapping allProcessConfig;
+    private AllTasksMapping allTasksConfig;
 
-	public Map<String, Object> getAllProcessConfigMap() {
-		return allProcessConfigMap;
-	}
+    public AllProcessesMapping getAllProcessConfig() {
+        return allProcessConfig;
+    }
 
-	public void setAllProcessConfigMap(Map<String, Object> object) {
-		this.allProcessConfigMap = object;
-	}
+    public void setAllProcessConfig(AllProcessesMapping allProcessesMapping) {
+        this.allProcessConfig = allProcessesMapping;
+    }
 
-	public List<Map<String, Object>> getEndStateConfigMap() {
-		return endStateConfigMap;
-	}
+    public List<EndState> getEndStateConfig() {
+        return endStateConfig;
+    }
 
-	public void setEndStateConfigMap(List<Map<String, Object>> object) {
-		this.endStateConfigMap = object;
-	}
+    public void setEndStateConfig(List<EndState> endStateList) {
+        this.endStateConfig = endStateList;
+    }
 
-	public Map<String, Object> getAllTasksConfigMap() {
-		return allTasksConfigMap;
-	}
+    public AllTasksMapping getAllTasksConfig() {
+        return allTasksConfig;
+    }
 
-	public void setAllTasksConfigMap(Map<String, Object> object) {
-		this.allTasksConfigMap = object;
-	}
+    public void setAllTasksConfig(AllTasksMapping allTasksMapping) {
+        this.allTasksConfig = allTasksMapping;
+    }
 }
