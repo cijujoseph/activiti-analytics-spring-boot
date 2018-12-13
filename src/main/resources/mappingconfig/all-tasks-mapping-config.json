@@ -9,7 +9,6 @@
             "fieldSource": "taskInstanceMetaData",
             "format": {
                 "keepOriginalValue": true,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
                 "targetFormat": "dd-MMM-yyyy HH:mm:ss",
                 "originalValueFieldName": "TaskStartDateTimestamp"
             }
@@ -21,7 +20,6 @@
             "fieldSource": "taskInstanceMetaData",
             "format": {
                 "keepOriginalValue": true,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
                 "targetFormat": "dd-MMM-yyyy HH:mm:ss",
                 "originalValueFieldName": "TaskEndDateTimestamp"
             }
@@ -34,7 +32,6 @@
             "fieldSource": "taskInstanceMetaData",
             "format": {
                 "keepOriginalValue": true,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
                 "targetFormat": "dd-MMM-yyyy HH:mm:ss",
                 "originalValueFieldName": "TaskClaimDateTimestamp"
             }
@@ -46,7 +43,6 @@
             "fieldSource": "taskInstanceMetaData",
             "format": {
                 "keepOriginalValue": true,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
                 "targetFormat": "dd-MMM-yyyy HH:mm:ss",
                 "originalValueFieldName": "TaskDueDateTimestamp"
             }

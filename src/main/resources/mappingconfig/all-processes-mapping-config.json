@@ -77,7 +77,6 @@
             "fieldSource": "processInstanceMetaData",
             "format": {
                 "keepOriginalValue": true,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
                 "targetFormat": "dd-MMM-yyyy HH:mm:ss",
                 "originalValueFieldName": "ProcessStartDateTimestamp"
             }
@@ -88,7 +87,6 @@
             "fieldSource": "processInstanceMetaData",
             "format": {
                 "keepOriginalValue": true,
-                "originalFormat": "yyyy-MM-dd'T'HH:mm:ss",
                 "targetFormat": "dd-MMM-yyyy HH:mm:ss",
                 "originalValueFieldName": "ProcessEndDateTimestamp"
             }

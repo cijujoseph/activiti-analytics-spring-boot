@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ActivitiAnalyticsApp {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ActivitiAnalyticsApp.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ActivitiAnalyticsApp.class, args);
+    }
 }
