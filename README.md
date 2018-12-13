@@ -30,13 +30,12 @@ Download the Oracle jdbc driver and run the following commands to add driver to 
 	mvn install:install-file -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 -Dversion=12.2.0.1 -Dpackaging=jar -Dfile=ojdbc8.jar -DgeneratePom=true
 	`
 
-	`
+	```
 	<dependency>
 		<groupId>com.oracle.jdbc</groupId>
 		<artifactId>ojdbc8</artifactId>
 		<version>12.2.0.1</version>
 	</dependency>
-	`
 
 * Run using the following command 
 	
@@ -69,8 +68,10 @@ Download the Oracle jdbc driver and run the following commands to add driver to 
 	
 * Prerequisite - Elasticsearch must be started prior to starting this app. Easiest way is to get it up and running is using Elastic docker.
 
+	`docker network create mydockernetwork
 	`
-	docker run --name elasticsearch -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" --net mydockernetwork 	docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+	
+	`docker run --name elasticsearch -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" --net mydockernetwork 	docker.elastic.co/elasticsearch/elasticsearch:6.2.4
 	`
 
 
