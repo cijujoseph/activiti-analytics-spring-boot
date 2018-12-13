@@ -47,9 +47,14 @@ public abstract class ActivitiEventAbstract implements Serializable {
     @Column(name = "user_id_")
     private String userId;
 
+    /* For PostgresSQL use the following */
     @Column(name = "data_", columnDefinition = "clob")
-    //@Lob
     private byte[] data;
+    
+    /* For other DBs (tested for H2 & Oracle) use the following */
+   /* @Column(name = "data_")
+    @Lob
+    private byte[] data;*/
 
     public String getLogNr() {
         return logNr;

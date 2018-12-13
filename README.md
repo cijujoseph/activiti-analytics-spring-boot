@@ -7,6 +7,18 @@ Activiti must be running with both history and events turned on to have analytic
 
 * Change the application.properties to match your activiti installation
 * Currently tested only against Activiti running on H2, Oracle, MySQL or Postgres databases. 
+* **Important: Depending on the database you are using for activiti, the data column definition in com.alfresco.activiti.analytics.entity.ActivitiEventAbstract will need to be adjusted as shown below**
+
+	```
+	/* For PostgresSQL use the following */
+    @Column(name = "data_", columnDefinition = "clob")
+    private byte[] data;
+    
+    /* For other DBs (tested for H2 & Oracle) use the following */
+    @Column(name = "data_")
+    @Lob
+    private byte[] data;```
+
 * If you are using Oracle DB, do the following to include oracle jdbc driver
 Download the Oracle jdbc driver and run the following commands to add driver to your local maven repository and aasociated pom.xml entry.
 
