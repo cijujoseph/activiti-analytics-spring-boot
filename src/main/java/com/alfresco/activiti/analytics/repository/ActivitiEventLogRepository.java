@@ -28,4 +28,12 @@ public interface ActivitiEventLogRepository extends JpaRepository<ActivitiEventL
     String getMaxTimestamp(@Param("to_timestamp") Date to_timestamp,
                            @Param("queryBatchSize") String queryBatchSize, @Param("excludedProcessDefinitionIdList") List<String> excludedProcessDefinitionIdList);
 
+
+        @Query(nativeQuery=true, value="select max(TIME_STAMP_) as TO_TIMESTAMP from (select TIME_STAMP_ from ACT_EVT_LOG where "
+        + "PROC_DEF_ID_ is not null and TIME_STAMP_ > :to_timestamp "
+        + "and  PROC_DEF_ID_ not in :excludedProcessDefinitionIdList "
+        + "group by TIME_STAMP_  order by TIME_STAMP_ asc LIMIT cast(:queryBatchSize as int)) as subquery" )
+String getMaxTimestampPostgres(@Param("to_timestamp") Date  to_timestamp, 
+                @Param("queryBatchSize") String  queryBatchSize, @Param("excludedProcessDefinitionIdList") List<String> excludedProcessDefinitionIdList);
+
 }

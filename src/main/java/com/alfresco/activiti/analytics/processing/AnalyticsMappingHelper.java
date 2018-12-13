@@ -36,7 +36,6 @@ public class AnalyticsMappingHelper {
 
     protected static final Logger logger = LoggerFactory.getLogger(AnalyticsMappingHelper.class);
 
-    @SuppressWarnings("unchecked")
     public Map<String, Object> lookupMapping(Mapping mapping,
                                              HistoricProcessInstance processInstanceDetails, Map<String, Object> processMetaData,
                                              Object taskDefinitionKeys, List<EndState> endStateConfigList,
@@ -49,7 +48,6 @@ public class AnalyticsMappingHelper {
         String key = mapping.getOriginalName();
         Object value = null;
 
-        // mapping based on Field Source value
         switch (fieldSource) {
             case "variable":
 
@@ -62,7 +60,7 @@ public class AnalyticsMappingHelper {
                         // events! Hence this api has been depricated
                         String endStateValue = processInstanceDetails.getEndActivityId();
                         if (endStateValue != null && processMetaData != null) {
-                            // To be converted to java later
+
                             for (EndState endStateConfig : endStateConfigList) {
                                 if (endStateConfig.getOriginalName().equals(processInstanceDetails.getEndActivityId())
                                         && endStateConfig.getProcessName().equals(processMetaData.get("PROCESSNAME"))) {

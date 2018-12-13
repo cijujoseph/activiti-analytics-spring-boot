@@ -40,6 +40,9 @@ public class ProcessBatchPreparation {
     @Autowired(required = false)
     private ProcessedActivitiEventsRepository processedActivitiEventsRepository;
 
+    @Value("${analytics.dbType}")
+	private String dbType;
+
     @Value("${analytics.isEnterprise}")
     private String isEnterprise;
 
@@ -103,11 +106,21 @@ public class ProcessBatchPreparation {
 
     private String getMostRecentTimestamp(String lastUpdatedTimestamp) throws ParseException {
         if (isEnterprise.equals("true") && isProcessedEventsTable.equals("true")) {
-            return processedActivitiEventsRepository.getMaxTimestamp(df.parse(lastUpdatedTimestamp), queryBatchSize,
-                    getExcludedProcessIds());
+            if(dbType.equals("PostgreSQL")){
+				return processedActivitiEventsRepository.getMaxTimestampPostgres(df.parse(lastUpdatedTimestamp), queryBatchSize,
+						getExcludedProcessIds());
+			} else {
+				return processedActivitiEventsRepository.getMaxTimestamp(df.parse(lastUpdatedTimestamp), queryBatchSize,
+						getExcludedProcessIds());
+			}
         } else {
-            return activitiEventLogRepository.getMaxTimestamp(df.parse(lastUpdatedTimestamp), queryBatchSize,
-                    getExcludedProcessIds());
+            if(dbType.equals("PostgreSQL")){
+				return activitiEventLogRepository.getMaxTimestampPostgres(df.parse(lastUpdatedTimestamp), queryBatchSize,
+						getExcludedProcessIds());
+			} else {
+			return activitiEventLogRepository.getMaxTimestamp(df.parse(lastUpdatedTimestamp), queryBatchSize,
+					getExcludedProcessIds());
+			}
         }
     }
 

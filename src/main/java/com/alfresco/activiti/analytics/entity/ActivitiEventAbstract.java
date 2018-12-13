@@ -47,8 +47,8 @@ public abstract class ActivitiEventAbstract implements Serializable {
     @Column(name = "user_id_")
     private String userId;
 
-    @Column(name = "data_")
-    @Lob
+    @Column(name = "data_", columnDefinition = "clob")
+    //@Lob
     private byte[] data;
 
     public String getLogNr() {
