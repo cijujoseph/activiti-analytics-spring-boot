@@ -36,6 +36,8 @@ Download the Oracle jdbc driver and run the following commands to add driver to 
 		<artifactId>ojdbc8</artifactId>
 		<version>12.2.0.1</version>
 	</dependency>
+	
+* If using MySQL, follow the instructions provided [here](https://github.com/cijujoseph/activiti-analytics-spring-boot/issues/9#issuecomment-454298067)
 
 * Run using the following command 
 	
